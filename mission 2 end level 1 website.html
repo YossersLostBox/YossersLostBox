@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mission Unlock</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+  body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    font-family: 'Orbitron', sans-serif;
+    color: #00ff99;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .container {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #00ff99;
+    border-radius: 15px;
+    padding: 30px;
+    width: 320px;
+    text-align: center;
+    box-shadow: 0 0 20px #00ff99;
+  }
+
+  h1 {
+    margin-bottom: 15px;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 2px solid #00ff99;
+    background: #111;
+    color: #00ff99;
+    font-size: 1.3rem;
+    letter-spacing: 3px;
+    text-align: center;
+  }
+
+  input[type="text"]:focus {
+    outline: none;
+    border-color: #66ffcc;
+    box-shadow: 0 0 10px #66ffcc;
+  }
+
+  button {
+    margin-top: 20px;
+    background: #00ff99;
+    border: none;
+    padding: 14px 0;
+    width: 100%;
+    font-size: 1.3rem;
+    color: #000;
+    font-weight: 700;
+    border-radius: 10px;
+    cursor: pointer;
+    letter-spacing: 2px;
+  }
+
+  button:hover {
+    background-color: #66ffcc;
+  }
+
+  .message {
+    margin-top: 25px;
+    font-size: 1.2rem;
+    min-height: 3rem;
+    transition: opacity 0.5s ease;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Mission Unlock</h1>
+  <label for="cardInput">Enter last 4 digits of your Mastercard</label>
+  <input type="text" id="cardInput" maxlength="4" autocomplete="off" placeholder="e.g. 1234" />
+  <button onclick="checkCard()">Submit</button>
+  <div class="message" id="message"></div>
+</div>
+
+<script>
+  const messageDiv = document.getElementById('message');
+  const input = document.getElementById('cardInput');
+
+  const passCharCodes = [55, 52, 54, 54];
+
+  
+  const passwordWordCodes = [107, 110, 111, 119, 115];
+
+  function decodeCharCodes(arr) {
+    return arr.map(c => String.fromCharCode(c)).join('');
+  }
+
+  function checkCard() {
+    const val = input.value.trim();
+
+    if (!/^\d{4}$/.test(val)) {
+      messageDiv.style.color = '#ff4d4d';
+      messageDiv.textContent = 'Please enter exactly 4 digits.';
+      return;
+    }
+
+    const valCharCodes = val.split('').map(c => c.charCodeAt(0));
+
+    let correct = true;
+    for (let i = 0; i < passCharCodes.length; i++) {
+      if (valCharCodes[i] !== passCharCodes[i]) {
+        correct = false;
+        break;
+      }
+    }
+
+    if (correct) {
+      const passWord = decodeCharCodes(passwordWordCodes);
+      messageDiv.style.color = '#00ff99';
+      messageDiv.textContent = `🎉 Congrats, Minos! You're unlocked and ready for the next mission. Password: ${passWord}`;
+      input.disabled = true;
+    } else {
+      messageDiv.style.color = '#ff4d4d';
+      messageDiv.textContent = '❌ Nope, that’s not it. Try again.';
+      input.value = '';
+      input.focus();
+    }
+  }
+</script>
+
+</body>
+</html>
