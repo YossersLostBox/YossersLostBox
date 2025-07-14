@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Yosser's Lost Box</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet" />
+  <style>
+    /* Reset and base */
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      color: #00FFAB;
+      font-family: 'Poppins', sans-serif;
+      background: #000000;
+      overflow-x: hidden;
+      position: relative;
+      backdrop-filter: blur(4px);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    #canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+      display: block;
+      filter: drop-shadow(0 0 4px #00ffab);
+      transition: filter 0.3s ease;
+    }
+    /* Main headings and text */
+    h1, .subtitle, .content, .footer {
+      position: relative;
+      z-index: 1;
+      user-select: none;
+    }
+    h1 {
+        font-family: 'Press Start 2P', cursive;
+        color: #00FFF7;
+        font-size: clamp(1.8rem, 5vw, 3rem);
+        margin-bottom: 0.5rem;
+        text-shadow: 0 0 10px #00fff7aa;
+        letter-spacing: 0.15em;
+        animation: glowPulse 3s ease-in-out infinite;
+    }
+
+    .subtitle {
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: #66fcf1;
+      margin-bottom: 2rem;
+      font-style: italic;
+      text-shadow: 0 0 12px #00fff799;
+      letter-spacing: 0.05em;
+    }
+    /* Content container */
+    .content {
+      max-width: 800px;
+      background: rgba(0, 0, 0, 0.85);
+      padding: 40px 50px;
+      border: 2px solid #00FFAB;
+      border-radius: 20px;
+      box-shadow: 0 0 40px #00FFABaa;
+      backdrop-filter: saturate(180%) blur(10px);
+      transition: box-shadow 0.3s ease;
+    }
+    .content:hover {
+      box-shadow: 0 0 60px #00ffabff;
+    }
+    .section {
+      margin-bottom: 2rem;
+      line-height: 1.5;
+      font-weight: 500;
+      font-size: 1.05rem;
+      color: #B2FFDD;
+    }
+    .section-title {
+      color: #ff66c4;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      font-size: 1.4rem;
+      text-shadow: 0 0 8px #ff66c499;
+      user-select: none;
+    }
+    ul {
+      list-style: none;
+      padding-left: 1rem;
+      text-align: left;
+      color: #ddffee;
+      font-weight: 500;
+      font-size: 1rem;
+    }
+    li {
+      margin-bottom: 0.6rem;
+      position: relative;
+      padding-left: 1.5em;
+    }
+    li::before {
+      content: "🌟";
+      position: absolute;
+      left: 0;
+      top: 0;
+      font-size: 1.2em;
+      line-height: 1;
+      user-select: none;
+      text-shadow: 0 0 5px #ffcc00cc;
+    }
+    .hint {
+      margin-top: 2rem;
+      font-size: 1.3rem;
+      color: #FFDE59;
+      font-weight: 700;
+      text-shadow: 0 0 12px #ffde5999;
+      letter-spacing: 0.02em;
+      line-height: 1.4;
+      user-select: text;
+    }
+    code {
+      background-color: rgba(255, 255, 255, 0.15);
+      padding: 3px 7px;
+      border-radius: 6px;
+      font-weight: 700;
+      color: #ffffffcc;
+      font-family: 'Courier New', Courier, monospace;
+      user-select: all;
+      cursor: text;
+      transition: background-color 0.3s ease;
+    }
+    code:hover {
+      background-color: rgba(255, 255, 255, 0.3);
+    }
+    .footer {
+      margin-top: 3rem;
+      font-size: 0.95rem;
+      color: #eeeeeecc;
+      text-shadow: 0 0 8px #ffffff88;
+      user-select: none;
+      font-weight: 600;
+    }
+    
+
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+      .content {
+        padding: 25px 20px;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      .section {
+        font-size: 0.95rem;
+      }
+      ul {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Animations */
+    @keyframes glowPulse {
+  0%, 100% {
+    text-shadow: 0 0 10px #00fff7aa, 0 0 18px #00fff799, 0 0 25px #00fff766;
+  }
+  50% {
+    text-shadow: 0 0 14px #00fff7cc, 0 0 22px #00fff7aa, 0 0 30px #00fff799;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <canvas id="canvas" aria-hidden="true"></canvas>
+
+  <h1>Yosser's Lost Box</h1>
+  <div class="subtitle" aria-label="Subtitle: Find the hidden treasure">Find the hidden treasure...</div>
+  <main class="content" role="main" aria-live="polite">
+    <section class="section" aria-label="Introduction to the treasure hunt">
+      <p>You’re about to begin a thrilling treasure hunt, crafted just for you.</p>
+      <p>This adventure is made of <strong>4 epic levels</strong>, each one filled with <strong> few secret missions</strong>.</p>
+      <p>🎁 After finishing each level, you’ll earn a special gift.</p>
+      <p>🏆 Complete both levels and you'll unlock a <strong>final surprise</strong>!</p>
+    </section>
+
+    <section class="section" aria-label="Game Rules">
+      <div class="section-title">🧭 Game Rules:</div>
+      <ul>
+        <li>No AI or online research allowed (But kisses are :D)</li>
+      </ul>
+    </section>
+
+    <section class="section" aria-label="Help instructions">
+      <div class="section-title">📖 Need help?</div>
+      <p>You have a <strong>Manual</strong> to guide you.<br>But beware: <em>Opening it costs you one kiss.</em></p>
+    </section>
+
+    <section class="section" aria-label="Important notes">
+      <div class="section-title">🔔 Important Notes:</div>
+      <ul>
+        <li>🎧 Put your headphones on.</li>
+        <li>📝 Keep a notebook next to you , you’ll need it.</li>
+      </ul>
+    </section>
+
+    <div class="hint" aria-live="assertive">
+      🕵️‍♂️ Ready to start?<br />
+      <strong>First Hint:</strong> <code>desktop/</code><br />
+      <strong>Second Hint:</strong> password = only digits... a date
+    </div>
+  </main>
+  <footer class="footer" role="contentinfo">Made with 💕 by Yoss</footer>
+
+
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    let width, height;
+    let particles = [];
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = 2;
+      }
+      move() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0) {
+          this.x = 0;
+          this.vx *= -1;
+        } else if (this.x > width) {
+          this.x = width;
+          this.vx *= -1;
+        }
+        if (this.y < 0) {
+          this.y = 0;
+          this.vy *= -1;
+        } else if (this.y > height) {
+          this.y = height;
+          this.vy *= -1;
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = '#00FFAB';
+        ctx.shadowColor = '#00FFABAA';
+        ctx.shadowBlur = 5;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function connectParticles() {
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          let dx = particles[i].x - particles[j].x;
+          let dy = particles[i].y - particles[j].y;
+          let dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 150) {
+            ctx.strokeStyle = `rgba(0, 255, 171, ${1 - dist / 150})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, width, height);
+      particles.forEach((p) => {
+        p.move();
+        p.draw();
+      });
+      connectParticles();
+      requestAnimationFrame(animate);
+    }
+
+    function init() {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * devicePixelRatio;
+      canvas.height = height * devicePixelRatio;
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+
+      particles = [];
+      const count = Math.min(100, Math.floor(width / 10));
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      init();
+    });
+
+    init();
+    animate();
+  </script>
+</body>
+</html>
